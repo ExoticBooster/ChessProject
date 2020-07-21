@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class BoardManager : MonoBehaviour
     private GameObject playingField;
     private Dictionary<String, field> fieldDict;
     private int colCount = 8;
+    GameObject cam;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +34,6 @@ public class BoardManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
     
     public void initializeBoard()
@@ -78,8 +80,8 @@ public class BoardManager : MonoBehaviour
             obj = GameObject.Instantiate(obj, position, obj.transform.rotation);
 
             if(teamColor == team.black){
-                obj.GetComponent<MeshRenderer>().material.SetColor("_Color", UnityEngine.Color.black);
-                obj.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", UnityEngine.Color.black);
+                obj.GetComponent<MeshRenderer>().material.SetColor("_Color", new UnityEngine.Color(0.2f,0.2f,0.2f));
+                obj.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new UnityEngine.Color(0.2f, 0.2f, 0.2f));
             }
         }
     }
