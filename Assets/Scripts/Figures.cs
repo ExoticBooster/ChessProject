@@ -155,4 +155,6 @@ Knight: standard -> can move 2 fields in one direction, then 1 left of right
 King:   standard -> can move 1 field, each direction possible
 
 Queen:  standard -> can move unlimited fields in each direction
+
+All figures can't move if king would be in check after move
 */
