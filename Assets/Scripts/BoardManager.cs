@@ -9,84 +9,81 @@ using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
-    public GameObject pawn;
+    public GameObject pawn, startPosition, playingField;
     private float boardWidth, fieldWidth;
-    private GameObject playingField;
-    private Dictionary<String, field> fieldDict;
+    private Dictionary<String, Field> fieldDict;
     private int colCount = 8;
-    GameObject cam;
-    // Start is called before the first frame update
+
+
     void Start()
     {
-        playingField = this.transform.GetChild(1).gameObject;
         boardWidth = playingField.GetComponent<BoxCollider>().size.x;
         fieldWidth = boardWidth / 8;
-        fieldDict = new Dictionary<string, field>();
-
-        //for (int i = 0; i < 8; i++)
-        //{
-        //    GameObject created = Instantiate(pawn, playingField.transform);
-        //    created.transform.localPosition = new Vector3(0 + (fieldWidth * -i ), 0, -fieldWidth);
-        //}
+        fieldDict = new Dictionary<string, Field>();
         initializeBoard();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
     
     public void initializeBoard()
     {
         Vector3 startPosition = playingField.transform.position;
-        for (int i = 0; i < colCount; i++)
+        // für alle Buchstaben
+        for (int i = 0; i <= colCount; i++)
         {
-            for (int j = 0; j < colCount; j++)
+            // 
+            for (int j = 1; j <= colCount; j++)
             {
                 String currentCode = "";
+                currentCode += (char)(65+i);
                 currentCode += i.ToString();
-                currentCode += (char)(65+j);
 
-                Vector3 currentPosition = new Vector3(startPosition.x + (fieldWidth * -j), startPosition.y, startPosition.z);
-                fieldDict[currentCode] = new field(currentPosition, currentCode);
+                Vector3 currentPosition = new Vector3(startPosition.x + (fieldWidth * -(j-1)), startPosition.y, startPosition.z);
+                fieldDict[currentCode] = new Field(currentPosition, currentCode);
                 if(i == 1)
                 {
-                    fieldDict[currentCode].addFigure(Figure.Pawn, team.white, pawn);
+                    fieldDict[currentCode].addFigure(Figure.Pawn, Team.white, pawn);
                 }
                 else if(i == 6)
                 {
-                    fieldDict[currentCode].addFigure(Figure.Pawn, team.black, pawn);
+                    fieldDict[currentCode].addFigure(Figure.Pawn, Team.black, pawn);
                 }
             }
             startPosition.z -= fieldWidth;
         }
     }
-    private class field
+
+    public void intitializePieces(){
+
+        for (int i = 1; i < colCount; i++)
+        {
+
+        }
+    }
+    private class Field
     {
         private Vector3 position;
         private String code;
-        private team teamColor;
+        private Team teamColor; 
         private Figure figure;
         private GameObject obj = null;
 
-        public field(Vector3 position, String code) {
+        public Field(Vector3 position, String code) {
             this.position = position;
             this.code = code;
         }
 
-        public void addFigure(Figure figure, team teamColor, GameObject obj){
+        public void addFigure(Figure figure, Team teamColor, GameObject obj){
             this.figure = figure;
             this.teamColor = teamColor;
             obj = GameObject.Instantiate(obj, position, obj.transform.rotation);
 
-            if(teamColor == team.black){
+            if(teamColor == Team.black){
                 obj.GetComponent<MeshRenderer>().material.SetColor("_Color", new UnityEngine.Color(0.2f,0.2f,0.2f));
                 obj.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new UnityEngine.Color(0.2f, 0.2f, 0.2f));
             }
         }
     }
 
-    private enum team
+    private enum Team
     {
         white,
         black
