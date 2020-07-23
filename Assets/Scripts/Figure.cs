@@ -6,7 +6,7 @@ public enum FColor {
     black,
     white
 }
-public abstract class Figure {
+public abstract class Figure : MonoBehaviour{
     private FColor color;
     
     // default constructor
@@ -28,14 +28,31 @@ public abstract class Figure {
 
     public abstract string getMoveSet();
     public abstract void move();
+    public abstract ref GameObject getGameObject();
+
+    protected void setMeshColor(){
+        if (this.getColor() == FColor.black)
+        {
+            this.getGameObject().GetComponent<MeshRenderer>().material.SetColor("_Color", new UnityEngine.Color(0.2f, 0.2f, 0.2f));
+            this.getGameObject().GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new UnityEngine.Color(0.2f, 0.2f, 0.2f));
+        }
+    }
 }
 
 public class Pawn : Figure {
     private string moveSet;
+    private GameObject pawnObject;
 
     public Pawn(){}
 
     public Pawn(FColor color) : base(color) {
+       pawnObject = GameObject.Instantiate(Resources.Load<GameObject>("pawn"));
+       this.setMeshColor();
+    }
+
+    public override ref GameObject getGameObject()
+    {
+        return ref pawnObject;
     }
 
     public override string getMoveSet(){
@@ -53,6 +70,11 @@ public class Knight : Figure {
     public Knight(){}
 
     public Knight(FColor color) : base(color) {
+    }
+
+    public override ref GameObject getGameObject()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override string getMoveSet(){
@@ -89,6 +111,11 @@ public class King : Figure {
         // TODO return if King is CheckMate
         return false;
     }
+
+    public override ref GameObject getGameObject()
+    {
+        throw new System.NotImplementedException();
+    }
 }
 
 public class Queen : Figure {
@@ -97,6 +124,11 @@ public class Queen : Figure {
     public Queen(){}
 
     public Queen(FColor color) : base(color) {
+    }
+
+    public override ref GameObject getGameObject()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override string getMoveSet(){
@@ -116,6 +148,11 @@ public class Rook : Figure {
     public Rook(FColor color) : base(color) {
     }
 
+    public override ref GameObject getGameObject()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override string getMoveSet(){
         return this.moveSet;
     }
@@ -131,6 +168,11 @@ public class Bishop : Figure {
     public Bishop(){}
 
     public Bishop(FColor color) : base(color) {
+    }
+
+    public override ref GameObject getGameObject()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override string getMoveSet(){

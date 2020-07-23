@@ -6,9 +6,11 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class BoardManager : MonoBehaviour
 {
+    [SerializeField]
     public GameObject pawn, startPosition, playingField;
     private float boardWidth, fieldWidth;
     private Dictionary<String, Field> fieldDict;
@@ -25,7 +27,7 @@ public class BoardManager : MonoBehaviour
     
     public void initializeBoard()
     {
-        Vector3 startPosition = playingField.transform.position;
+        Vector3 startPos = startPosition.transform.position;
         // für alle Buchstaben
         for (int i = 0; i <= colCount; i++)
         {
@@ -36,67 +38,36 @@ public class BoardManager : MonoBehaviour
                 currentCode += (char)(65+i);
                 currentCode += i.ToString();
 
-                Vector3 currentPosition = new Vector3(startPosition.x + (fieldWidth * -(j-1)), startPosition.y, startPosition.z);
+                Vector3 currentPosition = new Vector3(startPos.x + (fieldWidth * +(j-1)), startPos.y, startPos.z);
                 fieldDict[currentCode] = new Field(currentPosition, currentCode);
-                if(i == 1)
+                if (i == 1)
                 {
-                    fieldDict[currentCode].addFigure(Figure.Pawn, Team.white, pawn);
+                    fieldDict[currentCode].initializeFigure(new Pawn(FColor.white));
                 }
-                else if(i == 6)
+                else if (i == 6)
                 {
-                    fieldDict[currentCode].addFigure(Figure.Pawn, Team.black, pawn);
+                    fieldDict[currentCode].initializeFigure(new Pawn(FColor.black));
                 }
             }
-            startPosition.z -= fieldWidth;
+            startPos.z += fieldWidth;
         }
     }
 
-    public void intitializePieces(){
-
-        for (int i = 1; i < colCount; i++)
-        {
-
-        }
-    }
     private class Field
     {
-        private Vector3 position;
+        private Vector3 worldPosition;
         private String code;
-        private Team teamColor; 
-        private Figure figure;
-        private GameObject obj = null;
+        private Figure figure = null;
 
         public Field(Vector3 position, String code) {
-            this.position = position;
+            this.worldPosition = position;
             this.code = code;
         }
 
-        public void addFigure(Figure figure, Team teamColor, GameObject obj){
+        public void initializeFigure(Figure figure)
+        {
             this.figure = figure;
-            this.teamColor = teamColor;
-            obj = GameObject.Instantiate(obj, position, obj.transform.rotation);
-
-            if(teamColor == Team.black){
-                obj.GetComponent<MeshRenderer>().material.SetColor("_Color", new UnityEngine.Color(0.2f,0.2f,0.2f));
-                obj.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new UnityEngine.Color(0.2f, 0.2f, 0.2f));
-            }
+            figure.getGameObject().transform.position = worldPosition;
         }
     }
-
-    private enum Team
-    {
-        white,
-        black
-    }
-
-    private enum Figure
-    {
-        Pawn,
-        Tower,
-        Knight,
-        Bishop,
-        Queen,
-        King
-    }
-
 }
